@@ -92,7 +92,7 @@ switch ($projectType) {
 }
 
 # --- Ask user which extensions to install ---
-$extensionChoice = Read-Host "Choose extensions to install:`n1. Live Server`n2. React Snippets`n3. Firefly + Auto Rename + Prettier + Bracket Color`n4. None"
+$extensionChoice = Read-Host "Choose extensions to install:`n1. Live Server`n2. React Snippets`n3. Firefly + Auto Rename + Prettier`n4. None"
 
 switch ($extensionChoice) {
     "1" {

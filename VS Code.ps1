@@ -117,100 +117,54 @@ switch ($extensionChoice) {
         Write-Output "⚠️ Invalid option. No extensions installed."
     }
 }
-# --- Set VS Code settings path ---
-$settingsPath = "$env:APPDATA\Code\User\settings.json"
-Write-Output "🛠️ Updating VS Code settings for Prettier..."
 
-# --- Define Prettier Settings Content ---
-$settingsContent = @"
-{
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true
-}
-"@
+# --- Ask before applying global VS Code settings ---
+$answer = Read-Host "Do you want to set Fira Code font and Prettier as your default VS Code formatter and font? (Y/N)"
+if ($answer.ToLower() -eq 'y') {
 
-# --- Ensure settings.json exists and merge settings safely ---
-if (Test-Path $settingsPath) {
+  # --- Ensure Global VS Code Settings for Prettier & FiraCode ---
+  $globalSettingsPath    = "$env:APPDATA\Code\User\settings.json"
+  $desiredGlobalSettings = @{
+    "editor.defaultFormatter" = "esbenp.prettier-vscode"
+    "editor.formatOnSave"     = $true
+    "editor.fontFamily"       = "Fira Code, 'Courier New', monospace"
+    "editor.fontLigatures"    = $true
+  }
+
+  if (Test-Path $globalSettingsPath) {
     try {
-        $existingContent = Get-Content $settingsPath -Raw
-        $existingJson = $existingContent | ConvertFrom-Json
-        $existingJson["editor.defaultFormatter"] = "esbenp.prettier-vscode"
-        $existingJson["editor.formatOnSave"] = $true
-        $mergedJson = $existingJson | ConvertTo-Json -Depth 10
-        Set-Content -Path $settingsPath -Value $mergedJson -Encoding UTF8
-        Write-Output "✅ Prettier settings merged into existing settings.json"
+      $existingJson = Get-Content $globalSettingsPath -Raw | ConvertFrom-Json
+      if (-not ($existingJson -is [hashtable])) { $existingJson = @{} }
     } catch {
-        Write-Output "⚠️ Could not parse existing settings.json. Overwriting with Prettier settings only."
-        Set-Content -Path $settingsPath -Value $settingsContent -Encoding UTF8
+      $existingJson = @{}
     }
+  } else {
+    # Create parent folder and initialize file
+    $parent = Split-Path $globalSettingsPath
+    New-Item -Path $parent -ItemType Directory -Force | Out-Null
+    '{}' | Out-File -FilePath $globalSettingsPath -Encoding UTF8
+    $existingJson = @{}
+  }
+
+  $updated = $false
+  foreach ($key in $desiredGlobalSettings.Keys) {
+    if (-not $existingJson.ContainsKey($key) -or
+        $existingJson[$key] -ne $desiredGlobalSettings[$key]) {
+      $existingJson[$key] = $desiredGlobalSettings[$key]
+      $updated = $true
+    }
+  }
+
+  if ($updated) {
+    $existingJson |
+      ConvertTo-Json -Depth 10 |
+      Set-Content -Path $globalSettingsPath -Encoding UTF8
+    Write-Output "✅ Global settings updated with Prettier & FiraCode font."
+  } else {
+    Write-Output "✅ Global settings already include Prettier & FiraCode font."
+  }
+
 } else {
-    # Create new settings.json with Prettier config
-    New-Item -Path $settingsPath -ItemType File -Force | Out-Null
-    Set-Content -Path $settingsPath -Value $settingsContent -Encoding UTF8
-    Write-Output "✅ Created new settings.json with Prettier config"
+  Write-Output "⚠️ Skipping global VS Code settings for Prettier & FiraCode."
 }
-
-# --- Ask to generate .prettierrc file ---
-$addPrettierConfig = Read-Host "Do you want to add a basic .prettierrc file to your project? (y/n)"
-if ($addPrettierConfig -eq "y") {
-    # Make sure $projectPath is defined
-    if (-not $projectPath) {
-        $projectPath = Read-Host "Enter your project folder path (e.g., C:\MyProject)"
-    }
-
-    $configPath = Join-Path $projectPath ".prettierrc"
-    $configContent = @"
-{
-  "semi": true,
-  "singleQuote": true,
-  "tabWidth": 2
-}
-"@
-    Set-Content -Path $configPath -Value $configContent -Encoding UTF8
-    Write-Output "✅ Created .prettierrc file in '$projectPath'"
-}
-
-# --- VS Code Font Configuration Prompt ---
-$settingsPath = "$env:APPDATA\Code\User\settings.json"
-
-# --- Ask User for Confirmation ---
-$useFiraCode = Read-Host "Do you want to set FiraCode-Medium as your default font in VS Code? (y/n)"
-
-if ($useFiraCode -eq "y") {
-    Write-Output "🖋️ Applying FiraCode-Medium font configuration..."
-
-    # --- Desired Settings ---
-    $fontSettings = @{
-        "editor.fontFamily"    = "fira code, 'Courier New', monospace"
-        "editor.fontLigatures" = $true
-    }
-
-    # --- Update or Create settings.json ---
-    if (Test-Path $settingsPath) {
-        try {
-            $existingContent = Get-Content $settingsPath -Raw
-            $existingJson = $existingContent | ConvertFrom-Json
-            foreach ($key in $fontSettings.Keys) {
-                $existingJson[$key] = $fontSettings[$key]
-            }
-            $mergedJson = $existingJson | ConvertTo-Json -Depth 10
-            Set-Content -Path $settingsPath -Value $mergedJson -Encoding UTF8
-            Write-Output "✅ FiraCode-Medium font settings updated in settings.json"
-        } catch {
-            Write-Output "⚠️ Failed to parse existing settings. Overwriting with new font config."
-            $fontJson = $fontSettings | ConvertTo-Json -Depth 10
-            Set-Content -Path $settingsPath -Value $fontJson -Encoding UTF8
-        }
-    } else {
-        # Create new settings.json with font settings
-        New-Item -Path $settingsPath -ItemType File -Force | Out-Null
-        $fontJson = $fontSettings | ConvertTo-Json -Depth 10
-        Set-Content -Path $settingsPath -Value $fontJson -Encoding UTF8
-        Write-Output "✅ Created settings.json with FiraCode-Medium font settings"
-    }
-} else {
-    Write-Output "⚠️ Skipped font configuration. FiraCode-Medium was not set as default."
-}
-
-Write-Output "🎉 Font setup decision complete!"
-
+Pause

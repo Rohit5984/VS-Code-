@@ -107,8 +107,7 @@ switch ($extensionChoice) {
         code --install-extension ankitcode.firefly
         code --install-extension formulahendry.auto-rename-tag
         code --install-extension esbenp.prettier-vscode
-        code --install-extension CoenraadS.bracket-pair-color-dlw
-        Write-Output "✅ Installed: Firefly, Auto Rename Tag, Prettier, Bracket Pair Color"
+        Write-Output "✅ Installed: Firefly, Auto Rename Tag, Prettier"
     } 
     "4" {
         Write-Output "⚠️ No extensions installed."

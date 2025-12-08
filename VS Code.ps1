@@ -5,16 +5,16 @@
 #              with a GUI folder picker for destination and source paths.
 # --------------------------------------------------------------------------------
 
-# Check for Administrator Privileges
-Write-Output "Checking for Administrator Privileges..."
+# Ensure STA + Admin
+if ([System.Threading.Thread]::CurrentThread.ApartmentState -ne 'STA') {
+    Start-Process -FilePath "powershell" -ArgumentList "-STA -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
+    exit
+}
 $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
 if (-not $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-    Write-Output "Please run this script as an Administrator."
-    Start-Process powershell -ArgumentList "-ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
-    Exit
+    Start-Process -FilePath "powershell" -ArgumentList "-STA -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
+    exit
 }
-
-# Bypass execution policy temporarily
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
 
 # Show Author Name
@@ -387,3 +387,4 @@ if ($answer.ToLower() -eq 'y') {
 }
 
 Pause
+

@@ -1,0 +1,62 @@
+First install python software from official site https://www.python.org/downloads/
+Install C/C++ or Python extensions in VS code as well as code runner also  then
+In keyboard 
+ctrl+shift+P
+type=>Preferences:Open User Settings(Json)  hit enter 
+Setting.json  and paste this below command 
+{
+  // ----------------------- General Editor -----------------------
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.fontFamily": "Fira Code, 'Courier New', monospace",
+  "editor.fontLigatures": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  },
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+
+  // ----------------------- Theme & Updates -----------------------
+  "workbench.colorTheme": "FireFly Pro Bright",
+  "extensions.autoUpdate": false,
+  "update.mode": "none",
+  "update.showReleaseNotes": false,
+
+  // ----------------------- Terminal -----------------------
+  "terminal.integrated.shellIntegration.enabled": true,
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+
+  // ----------------------- C / C++ Formatting -----------------------
+  "[c]": {
+    "editor.defaultFormatter": "ms-vscode.cpptools",
+    "editor.formatOnSave": true
+  },
+  "[cpp]": {
+    "editor.defaultFormatter": "ms-vscode.cpptools",
+    "editor.formatOnSave": true
+  },
+  "C_Cpp.default.cppStandard": "c++20",
+  "C_Cpp.default.cStandard": "c11",
+  "C_Cpp.default.intelliSenseMode": "windows-gcc-x64",
+  "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Google, IndentWidth: 4, ColumnLimit: 100 }",
+
+  // ----------------------- Code Runner -----------------------
+  "code-runner.runInTerminal": true,
+  "code-runner.clearPreviousOutput": true,
+  "code-runner.showExecutionMessage": false,
+  "code-runner.preserveFocus": false,
+  "code-runner.saveFileBeforeRun": true,
+  "code-runner.fileDirectoryAsCwd": true,
+  "code-runner.ignoreSelection": true,
+
+  "code-runner.executorMap": {
+    "python": "cls && python \"$fileName\"",
+    "c": "cls && gcc \"$fileName\" -o \"$fileNameWithoutExt.exe\" -Wall -Wextra -O2 -fno-diagnostics-color && & \".\\$fileNameWithoutExt.exe\"",
+    "cpp": "cls && g++ \"$fileName\" -o \"$fileNameWithoutExt.exe\" -Wall -Wextra -std=c++20 -O2 -fno-diagnostics-color && & \".\\$fileNameWithoutExt.exe\""
+  },
+
+  "code-runner.respectShebang": false,
+  "code-runner.terminalRoot": "/"
+}

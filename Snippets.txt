@@ -1,0 +1,33 @@
+ctrl+shift+P
+type=>Preferences:Configure User Snippets
+Select New Global Snippets file 
+and name it like rohit.json or program.json whatever you like 
+then copy this below C and C++ and paste on it and save it 
+{
+  "C Boilerplate": {
+    "prefix": "cboiler",
+    "body": [
+      "#include <stdio.h>",
+      "",
+      "int main() {",
+      "    $0",
+      "    return 0;",
+      "}"
+    ],
+    "description": "Basic C boilerplate with main function"
+  },
+
+  "C++ Boilerplate": {
+    "prefix": "cppboiler",
+    "body": [
+      "#include <iostream>",
+      "using namespace std;",
+      "",
+      "int main() {",
+      "    $0",
+      "    return 0;",
+      "}"
+    ],
+    "description": "Basic C++ boilerplate with main function"
+  }
+}

@@ -29,5 +29,24 @@ then copy this below C and C++ and paste on it and save it
       "}"
     ],
     "description": "Basic C++ boilerplate with main function"
+  },
+
+  "HTML Boilerplate": {
+    "prefix": "htmlboiler",
+    "body": [
+      "<!DOCTYPE html>",
+      "<html lang=\"en\">",
+      "<head>",
+      "    <meta charset=\"UTF-8\">",
+      "    <title>My Project</title>",
+      "    <link rel=\"stylesheet\" href=\"style.css\">",
+      "</head>",
+      "<body>",
+      "    $0",
+      "</body>",
+      "<script src=\"script.js\"></script>",
+      "</html>"
+    ],
+    "description": "Custom HTML boilerplate with cursor inside body"
   }
 }

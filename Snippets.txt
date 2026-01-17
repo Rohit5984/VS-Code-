@@ -48,5 +48,25 @@ then copy this below C and C++ and paste on it and save it
       "</html>"
     ],
     "description": "Custom HTML boilerplate with cursor inside body"
-  }
+  },
+
+"CSS snippet/boilerplate": {
+    "prefix": "cssboiler",
+    "body": [
+        "*{",
+        "  margin: 0;",
+        "  padding: 0;",
+        "  box-sizing: border-box;",
+        "}",
+        "",
+        "html, body {",
+        "  height: 100%;",
+        "  width: 100%;",
+        "  -webkit-font-smoothing: antialiased;",
+        "}",
+        "",
+         "$0",  //From where the cursor should be started
+    ],
+    "description": "CSS boilerplate"
+}
 }

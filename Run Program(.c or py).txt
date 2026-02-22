@@ -5,7 +5,24 @@ ctrl+shift+P
 type=>Preferences:Open User Settings(Json)  hit enter 
 Setting.json  and paste this below command 
 {
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.python"
+  },
+  "[c]": {
+    "editor.defaultFormatter": "ms-vscode.cpptools"
+  },
+  "[cpp]": {
+    "editor.defaultFormatter": "ms-vscode.cpptools"
+  },
   "editor.fontFamily": "Fira Code, 'Courier New', monospace",
   "editor.fontLigatures": true,
   "editor.formatOnSave": true,
@@ -48,3 +65,4 @@ Setting.json  and paste this below command
     "cpp": "cls; try { Stop-Process -Name \"$fileNameWithoutExt\" -ErrorAction SilentlyContinue } catch {}; Start-Sleep -m 100; g++ \"$fileName\" -o \"$fileNameWithoutExt.exe\" -std=c++20 -Wall -O2; if ($?) { & \".\\$fileNameWithoutExt.exe\" }"
   }
 }
+

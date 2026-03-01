@@ -1,3 +1,4 @@
+Make sure your keyboard layout is English (United States) – US.
 First install python software from official site https://www.python.org/downloads/
 Install C/C++ or Python extensions in VS code as well as code runner also  then
 In keyboard 
@@ -81,6 +82,7 @@ Paste this below command make sure you have installed Code Runner extension
     "command": "code-runner.stop",
   },
 ]
+
 
 
 

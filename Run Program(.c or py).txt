@@ -66,3 +66,22 @@ Setting.json  and paste this below command
   }
 }
 
+In keyboard 
+ctrl+shift+P
+type=>Preferences: Open Keyboard Shortcuts (JSON) hit enter
+Paste this below command make sure you have installed Code Runner extension
+[
+  {
+    "key": "ctrl+alt+n",
+    "command": "code-runner.run",
+    "when": "editorTextFocus",
+  },
+  {
+    "key": "ctrl+alt+m",
+    "command": "code-runner.stop",
+  },
+]
+
+
+
+

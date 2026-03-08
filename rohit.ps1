@@ -1,56 +1,51 @@
-# architect.ps1
-function Build-WinRazeProject {
-    param (
-        [Parameter(Mandatory=$true)] [string]$authorName,
-        [Parameter(Mandatory=$true)] [string]$appNameRaw,
-        [switch]$installMsys,
-        [switch]$installRust,
-        [switch]$installNode
-    )
+# --- PARAMETER BLOCK ---
+# This allows the GUI to pass data directly into the script
+param (
+    [Parameter(Mandatory=$false)]
+    [string]$Author = "Rohit Kr. Mandal",
+    [Parameter(Mandatory=$false)]
+    [string]$AppName = "Cyber-App"
+)
 
-    # 1. Path & Name Safety
-    $appName   = $appNameRaw -replace '[\s]+', '-'
-    $cleanName = ($appName -replace '-', '').ToLower()
-    $projectPath = Join-Path (Get-Location).Path $appName
+Write-Host "`n [!] Initializing 2026 Elite Scaffolder..." -ForegroundColor Cyan
+Write-Host " [!] Author: $Author" -ForegroundColor Magenta
+Write-Host " [!] App Name: $AppName" -ForegroundColor Magenta
 
-    Write-Host "`n[!] Initializing WinRaze Architecture for: $appNameRaw" -ForegroundColor Cyan
+# 1. Path & Name Safety
+$appNameClean = $AppName -replace '[\s]+', '-'
+$cleanName = ($appNameClean -replace '-', '').ToLower()
+$projectPath = Join-Path (Get-Location).Path $appNameClean
 
-    # 2. Check for existing folder
-    if (Test-Path $projectPath) {
-        Write-Host "[!] Warning: Folder '$appName' already exists. Cleaning up..." -ForegroundColor Yellow
-        Remove-Item -Path $projectPath -Recurse -Force
-    }
+if (Test-Path $projectPath) {
+    Write-Host "`n [!] Cleaning existing directory..." -ForegroundColor Yellow
+    Remove-Item -Path $projectPath -Recurse -Force
+}
 
-    # 3. CRITICAL: Create Directory Structure first
-    Write-Host "[*] Creating directory structure..." -ForegroundColor Gray
-    New-Item -Path "$projectPath/src" -ItemType Directory -Force | Out-Null
-    New-Item -Path "$projectPath/src-tauri/src" -ItemType Directory -Force | Out-Null
-    New-Item -Path "$projectPath/src-tauri/icons" -ItemType Directory -Force | Out-Null
+# 2. Directory Structure
+New-Item -Path "$projectPath/src" -ItemType Directory -Force | Out-Null
+New-Item -Path "$projectPath/src-tauri/src" -ItemType Directory -Force | Out-Null
+New-Item -Path "$projectPath/src-tauri/icons" -ItemType Directory -Force | Out-Null
 
-    $Utf8NoBom = New-Object System.Text.UTF8Encoding $false
+$Utf8NoBom = New-Object System.Text.UTF8Encoding $false
 
-    # 4. AUTO-DOWNLOAD WebView2Loader.dll
-    Write-Host "[*] Fetching WebView2Loader.dll..." -ForegroundColor Cyan
-    $dllUrl = "https://github.com/Rohit5984/VS-Code-/releases/download/v2.0.0/WebView2Loader.dll"
-    $dllDest = "$projectPath/src-tauri/WebView2Loader.dll"
+# 3. AUTO-DOWNLOAD WebView2Loader.dll
+Write-Host "`n [*] Downloading WebView2Loader.dll..." -ForegroundColor Cyan
+$dllUrl = "https://github.com/Rohit5984/VS-Code-/releases/download/v2.0.0/WebView2Loader.dll"
+$dllDest = "$projectPath/src-tauri/WebView2Loader.dll"
 
-    try {
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        Invoke-WebRequest -Uri $dllUrl -OutFile $dllDest -ErrorAction Stop
-        Write-Host "[SUCCESS] WebView2Loader.dll integrated." -ForegroundColor Green
-    } catch {
-        Write-Host "[ERROR] Internet connection required for DLL download." -ForegroundColor Red
-    }
+try {
+    Invoke-WebRequest -Uri $dllUrl -OutFile $dllDest -ErrorAction Stop
+    Write-Host " [OK] Integrated WebView2Loader.dll" -ForegroundColor Green
+} catch {
+    Write-Host " [ERROR] Connection failed. DLL missing." -ForegroundColor Red
+}
 
-    # 5. Writing Architecture Files
-    Write-Host "[*] Injecting Cargo, Tauri, and Vite configs..." -ForegroundColor Gray
-
-    # --- Cargo.toml ---
-    $cargoToml = @"
+# 4. CONFIG GENERATION (Cargo.toml)
+$cargoToml = @"
 [package]
 name = "$cleanName"
 version = "0.1.0"
-authors = ["$authorName"]
+authors = ["$Author"]
 edition = "2021"
 
 [lib]
@@ -72,15 +67,14 @@ lto = "thin"
 codegen-units = 16
 strip = true
 "@
-    [System.IO.File]::WriteAllText("$projectPath/src-tauri/Cargo.toml", $cargoToml, $Utf8NoBom)
+[System.IO.File]::WriteAllText("$projectPath/src-tauri/Cargo.toml", $cargoToml, $Utf8NoBom)
 
-    # --- Tauri Config ---
-    $safeAuthorId = $authorName.ToLower() -replace ' ',''
-    $tauriConf = @"
+# 5. TAURI CONFIG (Glassmorphism Enabled)
+$tauriConf = @"
 {
-  "productName": "$appNameRaw",
+  "productName": "$AppName",
   "version": "0.1.0",
-  "identifier": "com.$cleanName.dev.$safeAuthorId",
+  "identifier": "com.$cleanName.dev",
   "build": {
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build",
@@ -90,10 +84,10 @@ strip = true
   "app": {
     "windows": [
       {
-        "title": "$appNameRaw",
-        "width": 400,
+        "title": "$AppName",
+        "width": 800,
         "height": 600,
-        "resizable": false,
+        "resizable": true,
         "transparent": true,
         "decorations": true
       }
@@ -103,45 +97,57 @@ strip = true
   "bundle": {
     "active": true,
     "targets": "all",
-    "icon": ["icons/hot.ico"],
     "resources": ["WebView2Loader.dll"]
   }
 }
 "@
-    [System.IO.File]::WriteAllText("$projectPath/src-tauri/tauri.conf.json", $tauriConf, $Utf8NoBom)
+[System.IO.File]::WriteAllText("$projectPath/src-tauri/tauri.conf.json", $tauriConf, $Utf8NoBom)
 
-    # --- Rust & Web Files ---
-    [System.IO.File]::WriteAllText("$projectPath/src-tauri/src/main.rs", "#![cfg_attr(not(debug_assertions), windows_subsystem = \"windows\")]`nfn main() { ${cleanName}_lib::run(); }", $Utf8NoBom)
-    
-    $rustLib = "   #[cfg_attr(mobile, tauri::mobile_entry_point)]`npub fn run() {`n    tauri::Builder::default().plugin(tauri_plugin_shell::init()).run(tauri::generate_context!()).expect(`"error`");`n}"
-    [System.IO.File]::WriteAllText("$projectPath/src-tauri/src/lib.rs", $rustLib, $Utf8NoBom)
-
-    [System.IO.File]::WriteAllText("$projectPath/package.json", "{`"name`":`"$cleanName`",`"version`":`"0.1.0`",`"type`":`"module`",`"scripts`":{`"dev`":`"vite`",`"build`":`"vite build`",`"desktop`":`"tauri dev`"}} ", $Utf8NoBom)
-    
-    [System.IO.File]::WriteAllText("$projectPath/index.html", "<!DOCTYPE html><html><head><title>$appNameRaw</title></head><body><div id='root'></div><script type='module' src='/src/main.js'></script></body></html>", $Utf8NoBom)
-    [System.IO.File]::WriteAllText("$projectPath/src/main.js", "// Logic starts here", $Utf8NoBom)
-    [System.IO.File]::WriteAllText("$projectPath/src/style.css", "/* Styles start here */", $Utf8NoBom)
-    [System.IO.File]::WriteAllText("$projectPath/.gitignore", "node_modules`ndist`ntarget`n*.log", $Utf8NoBom)
-    [System.IO.File]::WriteAllText("$projectPath/src-tauri/build.rs", "fn main() { tauri_build::build(); }", $Utf8NoBom)
-
-    # 6. Tools Setup
-    $desktop = [Environment]::GetFolderPath("Desktop")
-    $toolsFolder = "$desktop\WinRaze_Tools"
-    if (!(Test-Path $toolsFolder)) { New-Item -ItemType Directory -Path $toolsFolder | Out-Null }
-
-    # Define tool download helper
-    $downloadTool = {
-        param($url, $name)
-        $path = Join-Path $toolsFolder $name
-        Write-Host "[*] Downloading $name..." -ForegroundColor Yellow
-        try { Invoke-WebRequest -Uri $url -OutFile $path -ErrorAction Stop; Write-Host "[SUCCESS] $name saved to Desktop." -ForegroundColor Green }
-        catch { Write-Host "[FAILED] Could not download $name." -ForegroundColor Red }
-    }
-
-    if ($installMsys) { &$downloadTool "https://github.com/Rohit5984/Software/releases/download/v1.0.0/Msys2-x86_64-20251213.exe" "Msys2-Installer.exe" }
-    if ($installRust) { &$downloadTool "https://github.com/Rohit5984/Software/releases/download/v1.0.0/rustup-init.exe" "rustup-init.exe" }
-    if ($installNode) { &$downloadTool "https://github.com/Rohit5984/Software/releases/download/v1.0.0/Node-v24.14.0-x64.msi" "Node-Installer.msi" }
-
-    Write-Host "`n[S-RANK COMPLETE] Project created at: $projectPath" -ForegroundColor Green
-    Write-Host "[!] To start: cd $appName; npm install; npm run desktop" -ForegroundColor Cyan
+# 6. PACKAGE.JSON (Signals & Vite 2026)
+$packageJson = @"
+{
+  "name": "$cleanName",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "tauri": "tauri",
+    "desktop": "tauri dev"
+  },
+  "dependencies": {
+    "@preact/signals-core": "^1.8.0",
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-shell": "^2"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2",
+    "vite": "^6"
+  }
 }
+"@
+[System.IO.File]::WriteAllText("$projectPath/package.json", $packageJson, $Utf8NoBom)
+
+# 7. RUST SOURCE
+$rustMain = "fn main() { ${cleanName}_lib::run(); }"
+[System.IO.File]::WriteAllText("$projectPath/src-tauri/src/main.rs", $rustMain, $Utf8NoBom)
+
+$rustLib = @"
+#[cfg_attr(mobile, tauri::mobile_entry_point)]
+pub fn run() {
+    tauri::Builder::default()
+        .plugin(tauri_plugin_shell::init())
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
+}
+"@
+[System.IO.File]::WriteAllText("$projectPath/src-tauri/src/lib.rs", $rustLib, $Utf8NoBom)
+
+$buildRs = "fn main() { tauri_build::build(); }"
+[System.IO.File]::WriteAllText("$projectPath/src-tauri/build.rs", $buildRs, $Utf8NoBom)
+
+Write-Host "`n [SUCCESS] Project '$AppName' created by $Author." -ForegroundColor Green
+Write-Host " [TIP] Run 'npm install' then 'npm run desktop' to start." -ForegroundColor Cyan
+
+# Keep window open for debugging if needed
+if ($Host.Name -eq "ConsoleHost") { Read-Host "`nPress Enter to exit" }

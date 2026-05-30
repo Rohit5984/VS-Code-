@@ -9,6 +9,7 @@ Download Rustup-init.exe (X64), type 2 enter and again enter after completing.
 After finishing HTML, CSS, JS setup in VS Code terminal, type these:
 
 
+```powershell
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 rustup target add x86_64-pc-windows-gnu
@@ -30,3 +31,4 @@ npm install
 npm install -D @tauri-apps/cli@latest
 
 npm run build-win
+

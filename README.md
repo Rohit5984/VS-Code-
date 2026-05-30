@@ -1,4 +1,4 @@
-# Setup Guide
+# Steps to build a Software
 
 Install MSYS2 and open MSYS2 UCRT64 terminal, then type:
 pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain  

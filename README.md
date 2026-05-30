@@ -30,6 +30,8 @@ Remove-Item -Recurse -Force node_modules, package-lock.json -ErrorAction Silentl
 npm install
 npm install -D @tauri-apps/cli@latest
 
+if (Test-Path "app-icon.png") { Write-Host "[+] New source graphic detected. Compiling multi-platform asset icons..." -ForegroundColor Cyan; npx tauri icon ./app-icon.png }
+
 npm run build-win
 
 # Prompt for AI's like gemini,chatgpt

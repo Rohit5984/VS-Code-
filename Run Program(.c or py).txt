@@ -15,15 +15,6 @@ Setting.json  and paste this below command
   "[html]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "[python]": {
-    "editor.defaultFormatter": "ms-python.python"
-  },
-  "[c]": {
-    "editor.defaultFormatter": "ms-vscode.cpptools"
-  },
-  "[cpp]": {
-    "editor.defaultFormatter": "ms-vscode.cpptools"
-  },
   "editor.fontFamily": "Fira Code, 'Courier New', monospace",
   "editor.fontLigatures": true,
   "editor.formatOnSave": true,
@@ -44,7 +35,7 @@ Setting.json  and paste this below command
   "terminal.integrated.scrollback": 2000,
   "C_Cpp.default.cppStandard": "c++20",
   "C_Cpp.default.cStandard": "c11",
-  "C_Cpp.default.intelliSenseMode": "windows-gcc-x64",
+  "C_Cpp.default.intelliSenseMode": "windows-msvc-x64",
   "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Google, IndentWidth: 4, ColumnLimit: 100 }",
   "code-runner.runInTerminal": true,
   "code-runner.clearPreviousOutput": true,
@@ -53,12 +44,11 @@ Setting.json  and paste this below command
   "code-runner.saveFileBeforeRun": true,
   "code-runner.fileDirectoryAsCwd": true,
   "code-runner.ignoreSelection": true,
-  "code-runner.terminalRoot": "",
   "code-runner.executorMap": {
     "javascript": "cls; Start-Sleep -m 50; node \"$fileName\"",
     "python": "cls; Start-Sleep -m 50; python -u \"$fileName\"",
-    "c": "cls; try { Stop-Process -Name \"$fileNameWithoutExt\" -ErrorAction SilentlyContinue } catch {}; Start-Sleep -m 100; gcc \"$fileName\" -o \"$fileNameWithoutExt.exe\" -Wall -O2; if ($?) { & \".\\$fileNameWithoutExt.exe\" }",
-    "cpp": "cls; try { Stop-Process -Name \"$fileNameWithoutExt\" -ErrorAction SilentlyContinue } catch {}; Start-Sleep -m 100; g++ \"$fileName\" -o \"$fileNameWithoutExt.exe\" -std=c++20 -Wall -O2; if ($?) { & \".\\$fileNameWithoutExt.exe\" }"
+    "c": "cls; cmd /c run_c.bat \"$fileName\"",
+    "cpp": "cls; cmd /c run_c.bat \"$fileName\""
   }
 }
 

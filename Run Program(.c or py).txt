@@ -7,21 +7,21 @@ type=>Preferences:Open User Settings(Json)  hit enter
 Setting.json  and paste this below command 
 {
   "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "editor.fontFamily": "Fira Code, 'Courier New', monospace",
   "editor.fontLigatures": true,
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
   "editor.codeActionsOnSave": {
-    "source.organizeImports": "explicit",
-    "source.fixAll": "explicit"
+    "source.organizeImports": "always",
+    "source.fixAll": "always",
   },
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
@@ -35,7 +35,7 @@ Setting.json  and paste this below command
   "terminal.integrated.scrollback": 2000,
   "C_Cpp.default.cppStandard": "c++20",
   "C_Cpp.default.cStandard": "c11",
-  "C_Cpp.default.intelliSenseMode": "windows-msvc-x64",
+  "C_Cpp.default.intelliSenseMode": "windows-gcc-x64",
   "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Google, IndentWidth: 4, ColumnLimit: 100 }",
   "code-runner.runInTerminal": true,
   "code-runner.clearPreviousOutput": true,
@@ -48,9 +48,10 @@ Setting.json  and paste this below command
     "javascript": "cls; Start-Sleep -m 50; node \"$fileName\"",
     "python": "cls; Start-Sleep -m 50; python -u \"$fileName\"",
     "c": "cls; cmd /c run_c.bat \"$fileName\"",
-    "cpp": "cls; cmd /c run_c.bat \"$fileName\""
-  }
+    "cpp": "cls; cmd /c run_c.bat \"$fileName\"",
+  },
 }
+
 
 In keyboard 
 ctrl+shift+P

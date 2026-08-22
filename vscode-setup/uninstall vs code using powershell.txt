@@ -1,3 +1,5 @@
+Make sure your keyboard layout is English (United States) – US.
+Open powershell paste these
 Get-Process Code -ErrorAction SilentlyContinue | Stop-Process -Force
 & "$env:LOCALAPPDATA\Programs\Microsoft VS Code\unins000.exe" /VERYSILENT
 Remove-Item "$env:APPDATA\Code" -Recurse -Force

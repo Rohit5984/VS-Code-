@@ -1,0 +1,12 @@
+// Place your key bindings in this file to override the defaults
+[
+    {
+        "key": "ctrl+alt+n",
+        "command": "code-runner.run",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "ctrl+alt+m",
+        "command": "code-runner.stop"
+    }
+]

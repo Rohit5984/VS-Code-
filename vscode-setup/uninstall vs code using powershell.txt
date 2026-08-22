@@ -1,0 +1,4 @@
+Get-Process Code -ErrorAction SilentlyContinue | Stop-Process -Force
+& "$env:LOCALAPPDATA\Programs\Microsoft VS Code\unins000.exe" /VERYSILENT
+Remove-Item "$env:APPDATA\Code" -Recurse -Force
+Remove-Item "$env:USERPROFILE\.vscode" -Recurse -Force

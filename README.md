@@ -1,47 +1,46 @@
 🚀 Universal Software Installer
+
 A simple PowerShell script that automatically installs all .exe and .msi software inside a folder.
 
 📁 How to Use
 1️⃣ Create a Folder
-Create a folder with any name you like, for example:
 
-📁 Software
+Create a folder with any name you like.
+
+For example:
+
+Software
 
 2️⃣ Add Your Software
+
 Put all the software installers you want to install inside the folder.
 
-📁 Software
- ├── 🌐 Chrome.exe
- ├── 🎵 VLC.exe
- ├── 🗜️ 7zip.exe
- ├── 💬 Discord.exe
- ├── 📦 Office.msi
- └── ⚡ install.ps1
+Software/
+├── Chrome.exe
+├── VLC.exe
+├── 7zip.exe
+├── Discord.exe
+├── Office.msi
+└── install.ps1
 
 3️⃣ Add the PowerShell Script
-Put install.ps1 inside the same folder with all your software.
+
+Copy install.ps1 into the same folder as your software installers.
 
 4️⃣ Run the Script ▶️
-Right-click install.ps1 and select:
 
-Run with PowerShell
+Right-click install.ps1 and select Run with PowerShell.
 
-5️⃣ Automatic Installation ⚙️
-The script will automatically:
+The script will automatically find all .exe and .msi files in the folder and install them.
 
-🔍 Find all .exe and .msi files
-🤫 Install them silently
-🛡️ Request Administrator permission if required
-⏱️ Prevent installers from running forever
-📝 Create an install.log file with the results
+⚙️ What It Does
+🔍 Automatically detects .exe and .msi files
+🤫 Installs software silently
+🛡️ Automatically requests Administrator permission
+⏱️ Stops installers that take longer than 10 minutes
+📝 Creates an install.log file with the installation results
 🎉 That's It!
-Just put your software + install.ps1 in one folder and run the script.
 
-All supported software will be installed automatically. 🚀
+Put your software installers and install.ps1 in the same folder, then run the script.
 
-📝 Log File
-After installation, you can check:
-
-📄 install.log
-
-for the installation results.
+The script will automatically install the software for you. 🚀
